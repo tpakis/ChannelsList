@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
@@ -21,8 +22,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -78,8 +79,8 @@ private fun ChannelRow(channel: Channel, onChannelClick: (Channel) -> Unit, focu
             .padding(8.dp).background(color = color)
     ) {
 
-        val imageModifier = Modifier.preferredSize(46.dp).clip(shape = CircleShape)
-        val image = vectorResource(id = R.drawable.header)
+        val imageModifier = Modifier.size(46.dp).clip(shape = CircleShape)
+        val image = ImageVector.vectorResource(id = R.drawable.header)
 
         Image(
             imageVector = image,
@@ -108,7 +109,7 @@ private fun ChannelList(
     val lazyRowState = rememberLazyListState()
     if (channelsState.value.selectedIndex > 0) {
         coroutineScope.launch {
-            lazyRowState.snapToItemIndex(channelsState.value.selectedIndex)
+            lazyRowState.scrollToItem(channelsState.value.selectedIndex)
         }
     }
     LazyRow(state = lazyRowState) {
