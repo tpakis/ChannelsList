@@ -1,6 +1,5 @@
 package com.aithanasakis.channelslist
 
-import android.view.KeyEvent
 import androidx.lifecycle.ViewModel
 import com.aithanasakis.channelslist.data.models.Channel
 import com.aithanasakis.channelslist.data.models.staticChannelsList
@@ -12,51 +11,28 @@ sealed class MainUiEvents {
     object NoEvent : MainUiEvents()
 }
 
-data class ChannelsListState(val selectedIndex: Int, val channels: List<Channel>)
+data class ChannelsListState(val channels: List<Channel>)
 
 class MainViewModel : ViewModel() {
-    private var selectedItemIndex = 0
+    private var focusedChannel: Channel? = null
     private val _uiEventsFlow = MutableStateFlow<MainUiEvents>(MainUiEvents.NoEvent)
     val uiEventsFlow: StateFlow<MainUiEvents> = _uiEventsFlow
 
     private val _channelsFlow =
-        MutableStateFlow(ChannelsListState(selectedItemIndex, staticChannelsList))
+        MutableStateFlow(ChannelsListState(staticChannelsList))
     val channelsFlow: StateFlow<ChannelsListState> = _channelsFlow
 
-
-    fun onDpadClicked(keyCode: Int) {
-        when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_LEFT -> selectPreviousChannel()
-            KeyEvent.KEYCODE_DPAD_RIGHT -> selectNextChannel()
-            KeyEvent.KEYCODE_DPAD_CENTER -> onChannelClick(channelsFlow.value.channels[selectedItemIndex])
-        }
-    }
-
     fun onChannelClick(channel: Channel) {
-        val indexOfChannelClicked = _channelsFlow.value.channels.indexOf(channel)
         _uiEventsFlow.value = MainUiEvents.ChannelClicked(channel)
-
-        if (indexOfChannelClicked != selectedItemIndex) {
-            selectedItemIndex = indexOfChannelClicked
-            _channelsFlow.value = _channelsFlow.value.copy(selectedIndex = indexOfChannelClicked)
-        }
     }
 
-    private fun selectNextChannel() {
-        if (selectedItemIndex < _channelsFlow.value.channels.lastIndex) {
-            selectedItemIndex += 1
-        } else {
-            selectedItemIndex = 0
-        }
-        _channelsFlow.value = _channelsFlow.value.copy(selectedIndex = selectedItemIndex)
+    fun onChannelFocused(channel: Channel) {
+        focusedChannel = channel
     }
 
-    private fun selectPreviousChannel() {
-        if (selectedItemIndex > 0) {
-            selectedItemIndex -= 1
-        } else {
-            selectedItemIndex = _channelsFlow.value.channels.lastIndex
+    fun onOkButtonClicked() {
+        focusedChannel?.let {
+            _uiEventsFlow.value = MainUiEvents.ChannelClicked(it)
         }
-        _channelsFlow.value = _channelsFlow.value.copy(selectedIndex = selectedItemIndex)
     }
 }

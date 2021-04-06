@@ -52,4 +52,11 @@ val staticChannelsList = listOf(
         7,
         "https://www.alphatv.gr/show/min-arxizeis-ti-moyrmoyra/epeisodia_min-arhizeis-ti-mourmoura/"
     ),
+    Channel(
+        "Mourmoura2",
+        "Min Arxizeis tin mourmoura",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Star_Channel_Greece_logo.svg/2880px-Star_Channel_Greece_logo.svg.png2",
+        8,
+        "https://www.alphatv.gr/show/min-arxizeis-ti-moyrmoyra/epeisodia_min-arhizeis-ti-mourmoura/"
+    ),
 )
